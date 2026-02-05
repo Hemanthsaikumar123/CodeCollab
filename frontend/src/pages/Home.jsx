@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext';
 
 const Home = () => {
+  const { colors, isDarkMode } = useTheme();
   const [roomId, setRoomId] = useState('');
   const navigate = useNavigate();
 
@@ -18,24 +20,24 @@ const Home = () => {
   };
 
   return (
-    <div className="h-screen w-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 flex items-center justify-center overflow-hidden">
+    <div className={`h-screen w-screen ${colors.bg.primary} flex items-center justify-center overflow-hidden`}>
       <div className="w-full h-full flex items-center justify-center px-8 py-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center w-full max-w-7xl h-full">
           
           {/* Left Side - Hero Content */}
           <div className="flex flex-col justify-center h-full space-y-8 text-center lg:text-left">
             <div className="space-y-6">
-              <h1 className="text-6xl lg:text-7xl xl:text-8xl font-bold text-gray-800 leading-tight">
+              <h1 className={`text-6xl lg:text-7xl xl:text-8xl font-bold ${colors.text.primary} leading-tight`}>
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   CodeCollab
                 </span>
               </h1>
-              <p className="text-xl lg:text-2xl xl:text-3xl text-gray-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed">
+              <p className={`text-xl lg:text-2xl xl:text-3xl ${colors.text.secondary} max-w-2xl mx-auto lg:mx-0 leading-relaxed`}>
                 Real-time collaborative code editor. Write code together, anywhere in the world.
               </p>
             </div>
             
-            <div className="space-y-6 text-gray-500">
+            <div className={`space-y-6 ${colors.text.tertiary}`}>
               <div className="flex items-center justify-center lg:justify-start space-x-4">
                 <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
                 <span className="text-lg lg:text-xl">Real-time synchronization</span>
@@ -56,7 +58,7 @@ const Home = () => {
 
             {/* Additional visual elements */}
             <div className="hidden lg:block pt-8">
-              <div className="text-sm text-gray-400 space-y-2">
+              <div className={`text-sm ${colors.text.tertiary} space-y-2`}>
                 <p>✨ No registration required</p>
                 <p>🚀 Start coding in seconds</p>
                 <p>🔒 Secure by default</p>
@@ -66,13 +68,13 @@ const Home = () => {
 
           {/* Right Side - Action Panel */}
           <div className="flex justify-center lg:justify-end h-full items-center">
-            <div className="bg-white rounded-3xl shadow-2xl p-10 w-full max-w-lg border border-gray-100 backdrop-blur-sm">
+            <div className={`${colors.bg.secondary} rounded-3xl shadow-2xl p-10 w-full max-w-lg ${colors.border.primary} border backdrop-blur-sm`}>
               <div className="text-center mb-10">
                 <div className="w-20 h-20 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                   <span className="text-white text-3xl">⚡</span>
                 </div>
-                <h2 className="text-3xl font-bold text-gray-800 mb-3">Get Started</h2>
-                <p className="text-gray-600">Create or join a collaborative coding session</p>
+                <h2 className={`text-3xl font-bold ${colors.text.primary} mb-3`}>Get Started</h2>
+                <p className={colors.text.secondary}>Create or join a collaborative coding session</p>
               </div>
 
               <div className="space-y-8">
@@ -89,10 +91,10 @@ const Home = () => {
 
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center">
-                    <div className="w-full border-t border-gray-200" />
+                    <div className={`w-full border-t ${colors.border.primary}`} />
                   </div>
                   <div className="relative flex justify-center text-sm">
-                    <span className="px-6 bg-white text-gray-500 font-medium text-base">or</span>
+                    <span className={`px-6 ${colors.bg.secondary} ${colors.text.tertiary} font-medium text-base`}>or</span>
                   </div>
                 </div>
 
@@ -104,7 +106,7 @@ const Home = () => {
                       placeholder="Enter room code (e.g., abc123)"
                       value={roomId}
                       onChange={(e) => setRoomId(e.target.value)}
-                      className="w-full px-6 py-5 border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center font-mono text-xl tracking-wider bg-gray-50 hover:bg-white transition-colors"
+                      className={`w-full px-6 py-5 ${colors.border.primary} border rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center font-mono text-xl tracking-wider ${colors.input.bg} ${colors.input.text} ${colors.input.placeholder} hover:${colors.bg.secondary} transition-colors`}
                     />
                   </div>
                   <button
@@ -119,7 +121,7 @@ const Home = () => {
               </div>
 
               <div className="mt-10 text-center">
-                <p className="text-sm text-gray-400 leading-relaxed">
+                <p className={`text-sm ${colors.text.tertiary} leading-relaxed`}>
                   🔒 Secure sessions • 👥 Invite teammates • 💾 Auto-save
                 </p>
               </div>

@@ -1,9 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as monaco from 'monaco-editor';
 import { useSocket } from '../contexts/SocketContext';
+import { useTheme } from '../contexts/ThemeContext';
 import LanguageSelector from './LanguageSelector';
 
 const Editor = ({ roomId }) => {
+  const { colors, isDarkMode } = useTheme();
   const containerRef = useRef(null);
   const editorRef = useRef(null);
   const { socket, isConnected, connectionError } = useSocket();
@@ -131,7 +133,7 @@ const Editor = ({ roomId }) => {
     editorRef.current = monaco.editor.create(containerRef.current, {
       value: config.defaultCode,
       language: config.language,
-      theme: 'vs-dark',
+      theme: isDarkMode ? 'vs-dark' : 'vs-light',
       automaticLayout: true,
       fontSize: 14,
       minimap: { enabled: false },
@@ -237,6 +239,13 @@ const Editor = ({ roomId }) => {
     };
   }, [socket, roomId, isConnected]);
 
+  // Update editor theme when global theme changes
+  useEffect(() => {
+    if (editorRef.current) {
+      monaco.editor.setTheme(isDarkMode ? 'vs-dark' : 'vs-light');
+    }
+  }, [isDarkMode]);
+
   if (connectionError) {
     return (
       <div className="h-[80vh] w-full flex items-center justify-center bg-red-50 border-2 border-red-200 rounded-lg">
@@ -265,18 +274,18 @@ const Editor = ({ roomId }) => {
   return (
     <div className="w-full">
       {/* Status Bar */}
-      <div className="bg-gray-800 text-white px-4 py-3 text-sm flex justify-between items-center">
+      <div className={`${colors.bg.primary} ${colors.text.primary} px-4 py-3 text-sm flex justify-between items-center ${colors.border.primary} border-b`}>
         <div className="flex items-center space-x-6">
           <span className="flex items-center">
             <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
             Connected
           </span>
           <span className="flex items-center">
-            <span className="text-gray-400 mr-1">Room:</span>
-            <span className="font-mono bg-gray-700 px-2 py-1 rounded text-xs">{roomId}</span>
+            <span className={`${colors.text.tertiary} mr-1`}>Room:</span>
+            <span className={`font-mono ${colors.bg.accent} px-2 py-1 rounded text-xs ${colors.text.primary}`}>{roomId}</span>
           </span>
           <span className="flex items-center">
-            <span className="text-gray-400 mr-1">👥</span>
+            <span className={`${colors.text.tertiary} mr-1`}>👥</span>
             {userCount} user{userCount !== 1 ? 's' : ''} online
           </span>
         </div>
@@ -286,14 +295,14 @@ const Editor = ({ roomId }) => {
             currentLanguage={currentLanguage}
             onLanguageChange={handleLanguageChange}
           />
-          <div className="text-xs text-gray-400 hidden sm:block">
+          <div className={`text-xs ${colors.text.tertiary} hidden sm:block`}>
             Press F11 for fullscreen
           </div>
         </div>
       </div>
       
       {/* Editor */}
-      <div ref={containerRef} className="h-[75vh] w-full border-l-2 border-r-2 border-b-2 border-gray-300" />
+      <div ref={containerRef} className={`h-[75vh] w-full border-l-2 border-r-2 border-b-2 ${colors.border.primary}`} />
     </div>
   );
 };
