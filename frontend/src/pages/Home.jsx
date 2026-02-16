@@ -1,23 +1,58 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTheme } from '../contexts/ThemeContext';
+import { useSocket } from '../contexts/SocketContext';
 
 const Home = () => {
-  const { colors, isDarkMode } = useTheme();
+  const { colors } = useTheme();
+  const { socket } = useSocket();
   const [roomId, setRoomId] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
   const createRoom = () => {
     const newRoomId = Math.random().toString(36).substring(2, 8);
+    
+    // Emit create-room event to backend
+    if (socket) {
+      socket.emit('create-room', newRoomId);
+    }
+    
     navigate(`/room/${newRoomId}`);
   };
 
   const joinRoom = (e) => {
     e.preventDefault();
     if (roomId.trim()) {
-      navigate(`/room/${roomId.trim()}`);
+      setErrorMessage('');
+      
+      // Check if room exists before navigating
+      if (socket) {
+        socket.emit('check-room', roomId.trim());
+      } else {
+        navigate(`/room/${roomId.trim()}`);
+      }
     }
   };
+
+  // Listen for room-exists response
+  useEffect(() => {
+    if (socket) {
+      const handleRoomExists = ({ roomId: checkedRoomId, exists }) => {
+        if (exists) {
+          navigate(`/room/${checkedRoomId}`);
+        } else {
+          setErrorMessage('Room does not exist. Please check the room code or create a new room.');
+        }
+      };
+
+      socket.on('room-exists', handleRoomExists);
+
+      return () => {
+        socket.off('room-exists', handleRoomExists);
+      };
+    }
+  }, [socket, navigate]);
 
   return (
     <div className={`h-screen w-screen ${colors.bg.primary} flex items-center justify-center overflow-hidden`}>
@@ -100,12 +135,21 @@ const Home = () => {
 
                 {/* Join Room */}
                 <form onSubmit={joinRoom} className="space-y-6">
+                  {errorMessage && (
+                    <div className="bg-red-900/30 border border-red-500 text-red-200 px-4 py-3 rounded-xl text-sm flex items-center">
+                      <span className="mr-2">🚫</span>
+                      {errorMessage}
+                    </div>
+                  )}
                   <div className="relative">
                     <input
                       type="text"
                       placeholder="Enter room code (e.g., abc123)"
                       value={roomId}
-                      onChange={(e) => setRoomId(e.target.value)}
+                      onChange={(e) => {
+                        setRoomId(e.target.value);
+                        setErrorMessage('');
+                      }}
                       className={`w-full px-6 py-5 ${colors.border.primary} border rounded-2xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent text-center font-mono text-xl tracking-wider ${colors.input.bg} ${colors.input.text} ${colors.input.placeholder} hover:${colors.bg.secondary} transition-colors`}
                     />
                   </div>

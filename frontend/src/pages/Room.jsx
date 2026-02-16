@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { FaBolt, FaClipboard, FaDoorOpen, FaEdit, FaTimes, FaMoon, FaSun } from 'react-icons/fa';
+import { FaBolt, FaClipboard, FaDoorOpen, FaEdit, FaTimes } from 'react-icons/fa';
 import { useTheme } from '../contexts/ThemeContext';
 import Editor from '../components/Editor';
 import ChatBox from '../components/ChatBox';
@@ -8,7 +8,7 @@ import ChatBox from '../components/ChatBox';
 const Room = () => {
   const { roomId } = useParams();
   const navigate = useNavigate();
-  const { isDarkMode, toggleTheme, colors } = useTheme();
+  const { colors } = useTheme();
   
   // Generate initial username but allow user to change it
   const [username, setUsername] = useState(() => {
@@ -136,7 +136,7 @@ const Room = () => {
               </div>
               <div className="flex items-center">
                 <span className={`${colors.text.tertiary} mr-2`}>You:</span>
-                <span className={`font-mono bg-blue-100 px-3 py-1 rounded-lg border border-blue-200 text-blue-800 flex items-center ${isDarkMode ? 'bg-blue-900 border-blue-700 text-blue-200' : ''}`}>
+                <span className="font-mono bg-blue-900 border-blue-700 text-blue-200 px-3 py-1 rounded-lg border flex items-center">
                   {username}
                   <button
                     onClick={handleEditUsername}
@@ -151,15 +151,6 @@ const Room = () => {
           </div>
 
           <div className="flex items-center space-x-3">
-            {/* Theme Toggle Button */}
-            <button
-              onClick={toggleTheme}
-              className={`${colors.button.ghost} p-2 rounded-lg transition-colors ${colors.text.secondary} hover:${colors.text.primary}`}
-              title={`Switch to ${isDarkMode ? 'light' : 'dark'} mode`}
-            >
-              {isDarkMode ? <FaSun className="w-5 h-5" /> : <FaMoon className="w-5 h-5" />}
-            </button>
-            
             <button
               onClick={copyRoomLink}
               className={`${colors.button.primary} text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center`}

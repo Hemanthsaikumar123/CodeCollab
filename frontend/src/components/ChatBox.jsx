@@ -5,7 +5,7 @@ import { FaPaperPlane, FaComments, FaUsers } from 'react-icons/fa';
 
 const ChatBox = ({ roomId, username }) => {
   const { socket, isConnected } = useContext(SocketContext);
-  const { colors, isDarkMode } = useTheme();
+  const { colors } = useTheme();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState('');
   const [userCount, setUserCount] = useState(0);

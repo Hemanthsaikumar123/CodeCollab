@@ -5,7 +5,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import LanguageSelector from './LanguageSelector';
 
 const Editor = ({ roomId }) => {
-  const { colors, isDarkMode } = useTheme();
+  const { colors } = useTheme();
   const containerRef = useRef(null);
   const editorRef = useRef(null);
   const { socket, isConnected, connectionError } = useSocket();
@@ -133,7 +133,7 @@ const Editor = ({ roomId }) => {
     editorRef.current = monaco.editor.create(containerRef.current, {
       value: config.defaultCode,
       language: config.language,
-      theme: isDarkMode ? 'vs-dark' : 'vs-light',
+      theme: 'vs-dark',
       automaticLayout: true,
       fontSize: 14,
       minimap: { enabled: false },
@@ -238,13 +238,6 @@ const Editor = ({ roomId }) => {
       }
     };
   }, [socket, roomId, isConnected]);
-
-  // Update editor theme when global theme changes
-  useEffect(() => {
-    if (editorRef.current) {
-      monaco.editor.setTheme(isDarkMode ? 'vs-dark' : 'vs-light');
-    }
-  }, [isDarkMode]);
 
   if (connectionError) {
     return (
