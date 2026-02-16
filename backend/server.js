@@ -18,6 +18,7 @@ const roomCodeState = new Map();
 const roomLanguages = new Map();
 const roomUsers = new Map(); // track users per room
 const roomMessages = new Map(); // store chat messages per room
+const activeRooms = new Set(); // track valid room IDs
 
 // Sample REST API route
 app.get('/api', (req, res) => {
@@ -27,6 +28,20 @@ app.get('/api', (req, res) => {
 // Socket.IO connection
 io.on('connection', (socket) => {
   console.log('New user connected:', socket.id);
+
+  // Create a new room
+  socket.on('create-room', (roomId) => {
+    activeRooms.add(roomId);
+    console.log(`Room created: ${roomId}`);
+    socket.emit('room-created', { roomId, success: true });
+  });
+
+  // Check if room exists
+  socket.on('check-room', (roomId) => {
+    const exists = activeRooms.has(roomId);
+    console.log(`Check room ${roomId}: ${exists}`);
+    socket.emit('room-exists', { roomId, exists });
+  });
 
   // Join a room
   socket.on('join-room', (roomId) => {
@@ -115,6 +130,7 @@ io.on('connection', (socket) => {
           roomCodeState.delete(roomId);
           roomLanguages.delete(roomId);
           roomMessages.delete(roomId);
+          activeRooms.delete(roomId);
           console.log(`Cleaned up empty room: ${roomId}`);
         }
       }
