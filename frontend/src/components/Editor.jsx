@@ -241,11 +241,11 @@ const Editor = ({ roomId }) => {
 
   if (connectionError) {
     return (
-      <div className="h-[80vh] w-full flex items-center justify-center bg-red-50 border-2 border-red-200 rounded-lg">
-        <div className="text-center">
-          <div className="text-red-600 text-xl mb-2">❌ Connection Error</div>
-          <div className="text-red-500">{connectionError}</div>
-          <div className="text-sm text-gray-600 mt-2">Make sure the server is running on localhost:5000</div>
+      <div className="h-full w-full flex items-center justify-center bg-black border-2 border-red-500">
+        <div className="text-center border border-red-500/50 bg-red-900/20 p-8">
+          <div className="text-red-400 text-xl mb-3 font-mono font-bold">[CONNECTION_ERROR]</div>
+          <div className="text-red-300 font-mono text-sm">{connectionError}</div>
+          <div className="text-xs text-gray-500 mt-3 font-mono">// Check server status: localhost:5000</div>
         </div>
       </div>
     );
@@ -253,10 +253,13 @@ const Editor = ({ roomId }) => {
 
   if (!isConnected) {
     return (
-      <div className="h-[80vh] w-full flex items-center justify-center bg-yellow-50 border-2 border-yellow-200 rounded-lg">
-        <div className="text-center">
-          <div className="text-yellow-600 text-xl mb-2">🔄 Connecting...</div>
-          <div className="text-yellow-500">Connecting to server</div>
+      <div className="h-full w-full flex items-center justify-center bg-black border-2 border-yellow-500/50">
+        <div className="text-center border border-yellow-500/50 bg-yellow-900/20 p-8">
+          <div className="text-yellow-400 text-xl mb-3 font-mono font-bold flex items-center justify-center">
+            <div className="w-2 h-2 bg-yellow-400 rounded-full mr-3 animate-pulse"></div>
+            [CONNECTING]
+          </div>
+          <div className="text-yellow-300 font-mono text-sm">Establishing connection...</div>
         </div>
       </div>
     );
@@ -265,21 +268,23 @@ const Editor = ({ roomId }) => {
   const currentConfig = getLanguageConfig(currentLanguage);
 
   return (
-    <div className="w-full">
+    <div className="w-full h-full flex flex-col">
       {/* Status Bar */}
-      <div className={`${colors.bg.primary} ${colors.text.primary} px-4 py-3 text-sm flex justify-between items-center ${colors.border.primary} border-b`}>
+      <div className="bg-gray-900 text-white px-4 py-2 text-xs flex justify-between items-center border-b-2 border-green-500/30">
         <div className="flex items-center space-x-6">
-          <span className="flex items-center">
-            <div className="w-2 h-2 bg-green-400 rounded-full mr-2 animate-pulse"></div>
-            Connected
+          <span className="flex items-center font-mono">
+            <div className="w-1.5 h-1.5 bg-green-400 mr-2 animate-pulse"></div>
+            <span className="text-green-400">[CONNECTED]</span>
           </span>
-          <span className="flex items-center">
-            <span className={`${colors.text.tertiary} mr-1`}>Room:</span>
-            <span className={`font-mono ${colors.bg.accent} px-2 py-1 rounded text-xs ${colors.text.primary}`}>{roomId}</span>
+          <span className="flex items-center font-mono">
+            <span className="text-gray-500">ROOM:</span>
+            <span className="ml-2 bg-black border border-green-500/50 px-2 py-0.5 text-green-400 tracking-wider">
+              {roomId}
+            </span>
           </span>
-          <span className="flex items-center">
-            <span className={`${colors.text.tertiary} mr-1`}>👥</span>
-            {userCount} user{userCount !== 1 ? 's' : ''} online
+          <span className="flex items-center font-mono">
+            <span className="text-gray-500">USERS:</span>
+            <span className="ml-2 text-cyan-400 font-bold">{userCount}</span>
           </span>
         </div>
         
@@ -288,14 +293,14 @@ const Editor = ({ roomId }) => {
             currentLanguage={currentLanguage}
             onLanguageChange={handleLanguageChange}
           />
-          <div className={`text-xs ${colors.text.tertiary} hidden sm:block`}>
-            Press F11 for fullscreen
+          <div className="text-gray-500 hidden sm:block font-mono">
+            [F11] fullscreen
           </div>
         </div>
       </div>
       
       {/* Editor */}
-      <div ref={containerRef} className={`h-[75vh] w-full border-l-2 border-r-2 border-b-2 ${colors.border.primary}`} />
+      <div ref={containerRef} className="flex-1 w-full" />
     </div>
   );
 };

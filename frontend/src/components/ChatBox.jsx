@@ -74,41 +74,41 @@ const ChatBox = ({ roomId, username }) => {
   };
 
   return (
-    <div className={`h-full flex flex-col ${colors.bg.secondary} rounded-lg shadow-sm ${colors.border.primary} border overflow-hidden`}>
+    <div className="h-full flex flex-col bg-gray-950 border-l-2 border-green-500/30">
       {/* Chat Header */}
-      <div className={`${colors.bg.accent} ${colors.border.primary} border-b px-4 py-3`}>
+      <div className="bg-gray-900 border-b-2 border-green-500/30 px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
-            <FaComments className={`${colors.text.accent} w-5 h-5`} />
-            <h3 className={`font-semibold ${colors.text.primary}`}>Chat</h3>
+            <FaComments className="text-cyan-400 w-4 h-4" />
+            <h3 className="font-bold text-white font-mono text-sm">CHAT_LOG</h3>
           </div>
-          <div className={`flex items-center space-x-1 text-sm ${colors.text.secondary}`}>
-            <FaUsers className="w-4 h-4" />
-            <span>{userCount}</span>
+          <div className="flex items-center space-x-2 text-xs">
+            <FaUsers className="text-green-400 w-3 h-3" />
+            <span className="text-green-400 font-mono font-bold">{userCount}</span>
           </div>
         </div>
-        <div className={`mt-1 text-xs ${colors.text.tertiary}`}>
+        <div className="mt-2 text-xs">
           {isConnected ? (
-            <span className="flex items-center">
-              <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
-              Connected
+            <span className="flex items-center text-green-400 font-mono">
+              <div className="w-1.5 h-1.5 bg-green-400 mr-2 animate-pulse"></div>
+              [ONLINE]
             </span>
           ) : (
-            <span className="flex items-center">
-              <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
-              Disconnected
+            <span className="flex items-center text-red-400 font-mono">
+              <div className="w-1.5 h-1.5 bg-red-400 mr-2"></div>
+              [OFFLINE]
             </span>
           )}
         </div>
       </div>
 
       {/* Messages Area */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-3">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-black/50">
         {messages.length === 0 ? (
-          <div className={`text-center ${colors.text.tertiary} mt-8`}>
-            <FaComments className="w-12 h-12 mx-auto mb-2 opacity-30" />
-            <p className="text-sm">No messages yet</p>
-            <p className="text-xs">Start the conversation!</p>
+          <div className="text-center text-gray-600 mt-8">
+            <FaComments className="w-10 h-10 mx-auto mb-3 opacity-20" />
+            <p className="text-sm font-mono">[NO_MESSAGES]</p>
+            <p className="text-xs font-mono mt-1">// Start conversation</p>
           </div>
         ) : (
           messages.map((msg, index) => {
@@ -119,31 +119,29 @@ const ChatBox = ({ roomId, username }) => {
                 className={`flex ${isOwnMessage ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[85%] rounded-lg px-3 py-2 ${
+                  className={`max-w-[85%] px-3 py-2 border ${
                     isOwnMessage
-                      ? `${colors.button.primary} text-white`
-                      : `${colors.bg.accent} ${colors.text.primary}`
+                      ? 'bg-cyan-500/20 border-cyan-500/50 text-cyan-100'
+                      : 'bg-gray-800/50 border-gray-700 text-gray-200'
                   }`}
                 >
-                  {/* Always show username/label */}
-                  <div className={`text-xs font-semibold mb-1 ${
-                    isOwnMessage ? 'text-blue-100' : colors.text.secondary
+                  {/* Username */}
+                  <div className={`text-xs font-bold mb-1 font-mono ${
+                    isOwnMessage ? 'text-cyan-400' : 'text-green-400'
                   }`}>
-                    {isOwnMessage ? 'You' : msg.user}
+                    {isOwnMessage ? 'YOU' : `${msg.user.toUpperCase()}`}
                   </div>
-                  <div className="text-sm whitespace-pre-wrap break-words">
+                  {/* Message */}
+                  <div className="text-sm whitespace-pre-wrap break-words font-mono">
                     {msg.message}
                   </div>
+                  {/* Timestamp */}
                   {msg.timestamp && (
-                    <div
-                      className={`text-xs mt-1 ${
-                        isOwnMessage ? 'text-blue-100' : colors.text.tertiary
-                      }`}
-                    >
-                      {new Date(msg.timestamp).toLocaleTimeString([], {
+                    <div className="text-xs mt-1 text-gray-500 font-mono">
+                      [{new Date(msg.timestamp).toLocaleTimeString([], {
                         hour: '2-digit',
                         minute: '2-digit',
-                      })}
+                      })}]
                     </div>
                   )}
                 </div>
@@ -155,28 +153,33 @@ const ChatBox = ({ roomId, username }) => {
       </div>
 
       {/* Input Area */}
-      <div className={`${colors.border.primary} border-t p-4`}>
+      <div className="border-t-2 border-green-500/30 p-4 bg-gray-900">
         <div className="flex space-x-2">
-          <input
-            type="text"
-            className={`flex-1 px-3 py-2 ${colors.border.primary} border rounded-lg text-sm ${colors.input.bg} ${colors.input.text} ${colors.input.placeholder} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent`}
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={handleKeyPress}
-            placeholder={isConnected ? "Type a message..." : "Connecting..."}
-            disabled={!isConnected}
-            maxLength={500}
-          />
+          <div className="flex-1 relative">
+            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-green-400 font-mono text-xs">
+              &gt;
+            </div>
+            <input
+              type="text"
+              className="w-full pl-8 pr-3 py-2 bg-black border-2 border-gray-700 focus:border-cyan-400 text-white placeholder-gray-600 text-sm font-mono focus:outline-none transition-colors"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder={isConnected ? "TYPE_MESSAGE" : "CONNECTING..."}
+              disabled={!isConnected}
+              maxLength={500}
+            />
+          </div>
           <button
             onClick={sendMessage}
             disabled={!input.trim() || !isConnected}
-            className={`${colors.button.primary} text-white px-4 py-2 rounded-lg hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center space-x-1`}
+            className="bg-cyan-500 hover:bg-cyan-600 text-black px-4 py-2 border-2 border-cyan-400 font-bold text-xs transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-1 hover:shadow-lg hover:shadow-cyan-500/50"
           >
-            <FaPaperPlane className="w-4 h-4" />
+            <FaPaperPlane className="w-3 h-3" />
           </button>
         </div>
-        <div className={`mt-2 text-xs ${colors.text.tertiary}`}>
-          Press Enter to send • {input.length}/500
+        <div className="mt-2 text-xs text-gray-600 font-mono">
+          [ENTER] to send • [{input.length}/500]
         </div>
       </div>
     </div>
