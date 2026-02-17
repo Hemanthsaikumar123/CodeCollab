@@ -190,14 +190,14 @@ const Room = () => {
       </header>
 
       {/* Main content: Editor + Chat */}
-      <main className="flex-1 flex gap-0 overflow-hidden">
+      <main className="flex-1 flex gap-0 overflow-hidden p-4 bg-black">
         {/* Editor */}
-        <div className="flex-1 h-full bg-gray-900 border-r-2 border-green-500/30 overflow-hidden">
+        <div className="flex-1 h-full bg-gray-900 border-2 border-green-500/50 overflow-hidden">
           <Editor roomId={roomId} />
         </div>
 
         {/* Chat */}
-        <div className="w-80 h-full bg-gray-950">
+        <div className="w-80 h-full bg-gray-950 ml-4 border-2 border-green-500/30">
           <ChatBox roomId={roomId} username={username} />
         </div>
       </main>
